@@ -1,8 +1,7 @@
 <?php
 
-error_log("path: " . $_SERVER['REQUEST_URI']);
+//error_log("path: " . $_SERVER['REQUEST_URI']);
 $imgid = end(split('/', $_SERVER['REQUEST_URI']));
-error_log("img: " . $imgid);
 $imgid = current(split('.png', $imgid));
 error_log("img: " . $imgid);
 
