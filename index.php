@@ -4,7 +4,7 @@ $collName = "images";
 
 
 $m = new Mongo("mongodb://localhost/", array("persist" => "onlyone"));
-$db = $m->selectDB("imgtest");
+$db = $m->selectDB($dbName);
 
 function clearCache() {
     $images = array_merge(glob("media/*.png"), glob("media/*.gif"), glob("media/*.jpg"));
@@ -33,7 +33,7 @@ function encodeImage($img) {
 function uploadImages($db, $collName) {
     $dir = '/Users/daniel/coco/imgs';
     //$fnames = array('catou', 'daniel', 'felix', 'laurence');
-    $images = array_merge(glob($dir . '/d*.png'), glob($dir . '/*.jpg'), glob($dir . '/*.gif'));
+    $images = array_merge(glob($dir . '/*.png'), glob($dir . '/*.jpg'), glob($dir . '/*.gif'));
     // GridFS
     $gridFS = $db->getGridFS($collName);
     foreach ($images as $image) {
@@ -74,13 +74,10 @@ $collection = $db->selectCollection($collName . ".files");
         <title></title>
     </head>
     <body>
-        <pre style="ZZdisplay: none;">
+        <pre style="display: none;">
             <?php
-            $query = null;
-            $fields = null;
             $sortfields = array("md5" => -1);
-            $sortfields = array("filename" => -1);
-//$cursor = $collection->find($query, $fields);
+            //$sortfields = array("filename" => -1);
             $cursor = $collection->find();
             $cursor->sort($sortfields);
             $images = array_values(iterator_to_array($cursor));
@@ -99,8 +96,9 @@ $collection = $db->selectCollection($collName . ".files");
                 echo '<div style="clear:both;"></div>' . "\n";
             }
             $i++;
-            $url = 'media/' . $image['_id'] .'.'. $image["metadata"]['ext'];
-            echo '<div style="float:left;"><img width="100" height="100" src="' . $url . '" alt="Angry face" /></div>' . "\n";
+            $url = 'media/' . $image['_id'] . '.' . $image["metadata"]['ext'];
+            $alt = $image['filename'];
+            echo '<div style="float:left;"><img width="100" height="100" src="' . $url . '" alt="'.$alt.'" /></div>' . "\n";
             //echo '<div style="float:left;"><img src="media/'.$image['_id'].'" alt="Angry face" /></div>'."\n";
         }
         ?>
