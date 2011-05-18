@@ -7,7 +7,8 @@ $m = new Mongo("mongodb://localhost/", array("persist" => "onlyone"));
 $db = $m->selectDB("imgtest");
 
 function clearCache() {
-    foreach (glob("media/*.png") as $filename) {
+    $images = array_merge(glob("media/*.png"), glob("media/*.gif"), glob("media/*.jpg"));
+    foreach ($images as $filename) {
         error_log('deleteing ' . $filename);
         unlink($filename);
     }
@@ -31,30 +32,30 @@ function encodeImage($img) {
 
 function uploadImages($db, $collName) {
     $dir = '/Users/daniel/coco/imgs';
-    $fnames = array('catou', 'daniel', 'felix', 'laurence');
+    //$fnames = array('catou', 'daniel', 'felix', 'laurence');
+    $images = array_merge(glob($dir . '/d*.png'), glob($dir . '/*.jpg'), glob($dir . '/*.gif'));
     // GridFS
     $gridFS = $db->getGridFS($collName);
-    foreach ($fnames as $fname) {
-        $fullfname = $dir . '/' . $fname . '.png';
-        error_log('uploading ' . $fname);
-        // err
-        $info = getimagesize($fullfname);
+    foreach ($images as $image) {
+        error_log('uploading ' . $image);
+        // err checking ???
+        $info = getimagesize($image);
+        $pathinfo = pathinfo($image);
         $extra = array(
-            "filename" => $fname . '.png',
+            "filename" => basename($image),
             "uploadDate" => new MongoDate(),
             "metadata" => array(
                 "eko" => true,
                 "width" => $info[0],
                 "height" => $info[1],
-                "mime" => $info['mime']
+                "mime" => $info['mime'],
+                "ext" => $pathinfo['extension']
             )
         );
 
-        //var_dump($info);
+        //$gridFS->storeFile($image, $extra);
 
-        $gridFS->storeFile($fullfname, $extra);
-
-        $b64 = encodeImage($fullfname);
+        $b64 = encodeImage($image);
         // here is where we transport!
         $decoded = base64_decode($b64);
         $gridFS->storeBytes($decoded, $extra);
@@ -98,7 +99,8 @@ $collection = $db->selectCollection($collName . ".files");
                 echo '<div style="clear:both;"></div>' . "\n";
             }
             $i++;
-            echo '<div style="float:left;"><img width="100" height="100" src="media/' . $image['_id'] . '.png" alt="Angry face" /></div>' . "\n";
+            $url = 'media/' . $image['_id'] .'.'. $image["metadata"]['ext'];
+            echo '<div style="float:left;"><img width="100" height="100" src="' . $url . '" alt="Angry face" /></div>' . "\n";
             //echo '<div style="float:left;"><img src="media/'.$image['_id'].'" alt="Angry face" /></div>'."\n";
         }
         ?>
