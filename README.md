@@ -39,9 +39,11 @@
 
 
 Cleanup:
-  remove imgtest db on dirac and ci.axialdev.net
-  remove AllowOverride in /etc/apache2/sites-available/default
-  remove /var/www/MongoImage
+  +remove AllowOverride in /etc/apache2/sites-available/default
+  +remove /var/www/MongoImage
+  +remove imgtest ci.axialdev.net
+
+  remove imgtest db on dirac 
   remove dirac:~/coco/...
   remove dirac:~/Sites/MongoImages/...
     
