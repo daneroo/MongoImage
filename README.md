@@ -4,6 +4,8 @@
     cd /home/daniel/mosaic/ginette/tint
     mkdir /tmp/coco
     find -name "*-[0-9][0-9][0-9]-100-100*" -exec cp {} /tmp/coco \;
+    # or
+    find -name "*-[0-9][02468]0-100-100*" -exec cp {} /tmp/coco \;
 
     #on local (dirac)
     mkdir -p /Users/daniel/coco/imgs
