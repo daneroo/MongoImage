@@ -10,7 +10,7 @@ $mongo = new Mongo();
 $db = $mongo->imgtest;
 
 // GridFS
-$gridFS = $db->getGridFS();
+$gridFS = $db->getGridFS("images");
 
 // Find image to stream
 //$image = $gridFS->findOne("daniel.png");
