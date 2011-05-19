@@ -38,7 +38,7 @@
     rsync --exclude .htaccess -av --progress MongoImage/ root@ci.axialdev.net:/var/www/MongoImage/
 
 
-Cleanup:
+# Cleanup:
   +remove AllowOverride in /etc/apache2/sites-available/default
   +remove /var/www/MongoImage
   +remove imgtest ci.axialdev.net
